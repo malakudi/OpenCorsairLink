@@ -15,3 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with OpenCorsairLink.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+enum CorsairLightingNodePro_LED_Mode {
+	StaticColor  = 0,
+	Temperature  = 3,
+	RainbowCycle = 4,
+	RainbowWave  = 5,
+	ColourShift  = 6,
+	ColourPulse  = 7,
+	ColourWave   = 8,
+	Visor        = 9,
+	Marquee      = 10,
+	Strobing     = 11,
+	Sequential   = 12,
+	
+};
+
+enum CorsairLightingNodePro_LED_Rate {
+	ZeroRate = 0,
+	HalfRate = 1,
+	FullRate = 2,
+}
+

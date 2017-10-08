@@ -155,7 +155,7 @@ struct corsair_device_info corsairlink_devices[] = {
 	},
 	{
 		.vendor_id = 0x1b1c,
-		.product_id = 0x0c0c,
+		.product_id = 0x0c10,
 		.device_id = 0xFF,
 		.name = "Commander PRO",
 		.read_endpoint = 0x01 | LIBUSB_ENDPOINT_IN,
