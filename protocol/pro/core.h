@@ -17,23 +17,30 @@
  */
 
 enum CorsairLightingNodePro_LED_Mode {
-	StaticColor  = 0,
-	Temperature  = 3,
-	RainbowCycle = 4,
-	RainbowWave  = 5,
-	ColourShift  = 6,
-	ColourPulse  = 7,
-	ColourWave   = 8,
-	Visor        = 9,
-	Marquee      = 10,
-	Strobing     = 11,
-	Sequential   = 12,
+	LNP_StaticColor  = 0,
+	LNP_Temperature  = 3,
+	LNP_RainbowCycle = 4,
+	LNP_RainbowWave  = 5,
+	LNP_ColourShift  = 6,
+	LNP_ColourPulse  = 7,
+	LNP_ColourWave   = 8,
+	LNP_Visor        = 9,
+	LNP_Marquee      = 10,
+	LNP_Strobing     = 11,
+	LNP_Sequential   = 12,
 	
 };
 
 enum CorsairLightingNodePro_LED_Rate {
-	ZeroRate = 0,
-	HalfRate = 1,
-	FullRate = 2,
+	LNP_ZeroRate = 0,
+	LNP_HalfRate = 1,
+	LNP_FullRate = 2,
 }
 
+enum CorsairLightingNodePro_LED_Type {
+	LNP_LED_Strip = 0x0A,
+	LNP_LED_HD_FAN = 0x0C,
+	LNP_LED_SP_FAN = 0x0C,
+	LNP_LED_LL_FAN = 0x00,
+	LNP_Dominator = 0x1C,
+}

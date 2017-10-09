@@ -54,6 +54,7 @@ int corsairlink_pro_set_led_rgb_colour(struct corsair_device_info *dev,
 	memset(commands, 0, sizeof(commands));
 
 	commands[0] = 0x31;
+	commands[1] = port;
 
 	rr = dev->driver->write(handle, dev->write_endpoint, commands, 19);
 	rr = dev->driver->read(handle, dev->read_endpoint, response, 32);
@@ -88,6 +89,7 @@ int corsairlink_pro_set_commit(struct corsair_device_info *dev,
 	memset(commands, 0, sizeof(commands));
 
 	commands[0] = 0x33;
+	commands[1] = 0xFF;
 
 	rr = dev->driver->write(handle, dev->write_endpoint, commands, 19);
 	rr = dev->driver->read(handle, dev->read_endpoint, response, 32);
@@ -105,6 +107,7 @@ int corsairlink_pro_set_begin(struct corsair_device_info *dev,
 	memset(commands, 0, sizeof(commands));
 
 	commands[0] = 0x34;
+	commands[1] = port;
 
 	rr = dev->driver->write(handle, dev->write_endpoint, commands, 19);
 	rr = dev->driver->read(handle, dev->read_endpoint, response, 32);
@@ -143,6 +146,10 @@ int corsairlink_pro_set_led_temperature(struct corsair_device_info *dev,
 	memset(commands, 0, sizeof(commands));
 
 	commands[0] = 0x36;
+	commands[1] = port;
+	commands[2] = port;
+	commands[3] = 0x0A;
+	commands[4] = 0x28;
 
 	rr = dev->driver->write(handle, dev->write_endpoint, commands, 19);
 	rr = dev->driver->read(handle, dev->read_endpoint, response, 32);
@@ -160,6 +167,7 @@ int corsairlink_pro_set_led_group_reset(struct corsair_device_info *dev,
 	memset(commands, 0, sizeof(commands));
 
 	commands[0] = 0x37;
+	commands[1] = port;
 
 	rr = dev->driver->write(handle, dev->write_endpoint, commands, 19);
 	rr = dev->driver->read(handle, dev->read_endpoint, response, 32);
@@ -177,6 +185,8 @@ int corsairlink_pro_set_port_state(struct corsair_device_info *dev,
 	memset(commands, 0, sizeof(commands));
 
 	commands[0] = 0x38;
+	commands[1] = port;
+	commands[2] = 0x01;
 
 	rr = dev->driver->write(handle, dev->write_endpoint, commands, 19);
 	rr = dev->driver->read(handle, dev->read_endpoint, response, 32);
