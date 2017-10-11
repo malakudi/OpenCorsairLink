@@ -15,6 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with OpenCorsairLink.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <libusb.h>
+#include "../../lowlevel/asetek4.h"
+#include "../../device.h"
+#include "../../driver.h"
+#include "../../print.h"
+
 int corsairlink_pro_get_temp_setup_mask(struct corsair_device_info *dev,
 			struct libusb_device_handle *handle, uint8_t port, struct color *color_led)
 {

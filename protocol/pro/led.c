@@ -27,7 +27,7 @@
 #include "../../driver.h"
 
 int corsairlink_pro_get_led_setup_mask(struct corsair_device_info *dev,
-			struct libusb_device_handle *handle, uint8_t port, struct color *color_led)
+			struct libusb_device_handle *handle, uint8_t port)
 {
 	int rr;
 	uint8_t response[32];
@@ -116,7 +116,8 @@ int corsairlink_pro_set_begin(struct corsair_device_info *dev,
 }
 
 int corsairlink_pro_set_led_config(struct corsair_device_info *dev, 
-			struct libusb_device_handle *handle, uint8_t port, struct color *color_led)
+			struct libusb_device_handle *handle, uint8_t channel, uint8_t strip_count,
+			uint8_t strip_led_count, uint8_t mode)
 {
 	int rr;
 	uint8_t response[32];
