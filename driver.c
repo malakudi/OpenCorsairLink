@@ -22,9 +22,11 @@
 #include "lowlevel/asetek4.h"
 #include "lowlevel/hid.h"
 #include "lowlevel/rmi.h"
+#include "lowlevel/pro.h"
 #include "protocol/asetek4/core.h"
 #include "protocol/hid/core.h"
 #include "protocol/rmi/core.h"
+#include "protocol/pro/core.h"
 
 struct corsair_device_driver corsairlink_driver_hid = {
 	.init = corsairlink_hid_init,
