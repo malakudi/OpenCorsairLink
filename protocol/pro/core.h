@@ -37,7 +37,7 @@ enum CorsairLightingNodePro_LED_Rate {
 	LNP_ZeroRate = 0,
 	LNP_HalfRate = 1,
 	LNP_FullRate = 2,
-}
+};
 
 enum CorsairLightingNodePro_LED_Type {
 	LNP_LED_Strip = 0x0A,
@@ -45,7 +45,7 @@ enum CorsairLightingNodePro_LED_Type {
 	LNP_LED_SP_FAN = 0x0C,
 	LNP_LED_LL_FAN = 0x00,
 	LNP_Dominator = 0x1C,
-}
+};
 
 int corsairlink_pro_device_id(struct corsair_device_info *dev,
 			struct libusb_device_handle *handle, uint8_t *device_id);
