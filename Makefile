@@ -14,7 +14,8 @@ OBJS = main.o \
 	scan.o
 OBJS_LL = lowlevel/asetek4.o \
 	lowlevel/hid.o \
-	lowlevel/rmi.o
+	lowlevel/rmi.o \
+	lowlevel/pro.o
 OBJS_PROTO = protocol/asetek4/core.o \
 	protocol/asetek4/fan.o \
 	protocol/asetek4/led.o \
@@ -28,7 +29,11 @@ OBJS_PROTO = protocol/asetek4/core.o \
 	protocol/hid/fan.o \
 	protocol/hid/led.o \
 	protocol/hid/pump.o \
-	protocol/hid/temperature.o
+	protocol/hid/temperature.o \
+	protocol/pro/core.o \
+	protocol/pro/fan.o \
+	protocol/pro/led.o \
+	protocol/pro/temperature.o
 
 default: all
 
