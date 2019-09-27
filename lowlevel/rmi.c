@@ -1,6 +1,6 @@
 /*
  * This file is part of OpenCorsairLink.
- * Copyright (C) 2017  Sean Nelson <audiohacked@gmail.com>
+ * Copyright (C) 2017-2019  Sean Nelson <audiohacked@gmail.com>
 
  * OpenCorsairLink is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,10 @@
 /*! \file lowlevel/rmi.c
  *  \brief Lowlevel Routines for RMi Series of Power Supplies
  */
-#include <stdio.h>
+#include "lowlevel/rmi.h"
+
 #include <libusb.h>
-#include "../lowlevel/rmi.h"
+#include <stdio.h>
 
 #define TIMEOUT_DEFAULT 5000
 #define INTERRUPT_IN_ENDPOINT 0x81
@@ -33,10 +34,10 @@
  *  @param[in] device endpoint for the data
  *  @return 0
  */
-int corsairlink_rmi_init(struct libusb_device_handle *dev_handle,
-			uint8_t endpoint)
+int
+corsairlink_rmi_init( struct libusb_device_handle* dev_handle, uint8_t endpoint )
 {
-	return 0;
+    return 0;
 }
 
 /*! RMi Power Supply De-Init
@@ -45,10 +46,10 @@ int corsairlink_rmi_init(struct libusb_device_handle *dev_handle,
  *  @param[in] device endpoint for the data
  *  @return 0
  */
-int corsairlink_rmi_deinit(struct libusb_device_handle *dev_handle,
-			uint8_t endpoint)
+int
+corsairlink_rmi_deinit( struct libusb_device_handle* dev_handle, uint8_t endpoint )
 {
-	return 0;
+    return 0;
 }
 
 /*! RMi Power Supply Lowlevel Write
@@ -59,20 +60,17 @@ int corsairlink_rmi_deinit(struct libusb_device_handle *dev_handle,
  *  @param[in] length of data to send, in bytes
  *  @return 0
  */
-int corsairlink_rmi_write(struct libusb_device_handle *dev_handle,
- 			uint8_t endpoint,
-			uint8_t *data,
-			int length)
+int
+corsairlink_rmi_write(
+    struct libusb_device_handle* dev_handle, uint8_t endpoint, uint8_t* data, int length )
 {
-	int bytes_transferred;
-	int rr;
-	
-	rr = libusb_interrupt_transfer(dev_handle,
- 				endpoint,
-				data, length,
-				&bytes_transferred, TIMEOUT_DEFAULT);
+    int bytes_transferred;
+    int rr;
 
-	return rr;
+    rr = libusb_interrupt_transfer(
+        dev_handle, endpoint, data, length, &bytes_transferred, TIMEOUT_DEFAULT );
+
+    return rr;
 }
 
 /*! RMi Power Supply Lowlevel Read
@@ -83,18 +81,15 @@ int corsairlink_rmi_write(struct libusb_device_handle *dev_handle,
  *  @param[in] length of data to send, in bytes
  *  @return 0
  */
-int corsairlink_rmi_read(struct libusb_device_handle *dev_handle,
-			uint8_t endpoint,
-			uint8_t *data,
-			int length)
+int
+corsairlink_rmi_read(
+    struct libusb_device_handle* dev_handle, uint8_t endpoint, uint8_t* data, int length )
 {
-	int bytes_transferred;
-	int rr;
-	
-	rr = libusb_interrupt_transfer(dev_handle,
-				endpoint,
-				data, length,
-				&bytes_transferred, TIMEOUT_DEFAULT);
+    int bytes_transferred;
+    int rr;
 
-	return rr;
+    rr = libusb_interrupt_transfer(
+        dev_handle, endpoint, data, length, &bytes_transferred, TIMEOUT_DEFAULT );
+
+    return rr;
 }
