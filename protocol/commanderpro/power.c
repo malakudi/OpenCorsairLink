@@ -16,14 +16,14 @@
  * along with OpenCorsairLink.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*! \file protocol/rmi/temperature.c
- *  \brief Temperature Routines for RMi Series of Power Supplies
+/*! \file protocol/commanderpro/power.c
+ *  \brief Power Routines for Commander Pro
  */
 #include "device.h"
 #include "driver.h"
-#include "lowlevel/rmi.h"
+#include "lowlevel/commanderpro.h"
 #include "print.h"
-#include "protocol/rmi.h"
+#include "protocol/commanderpro.h"
 
 #include <errno.h>
 #include <libusb.h>
@@ -33,34 +33,30 @@
 #include <unistd.h>
 
 int
-corsairlink_rmi_temperature(
+corsairlink_commanderpro_voltage(
     struct corsair_device_info* dev,
     struct libusb_device_handle* handle,
-    uint8_t probe,
-    double* temperature )
+    uint8_t sensor_index,
+    double* voltage )
 {
     int rr;
-    uint8_t response[64];
+    uint8_t response[16];
     uint8_t commands[64];
     memset( response, 0, sizeof( response ) );
     memset( commands, 0, sizeof( commands ) );
 
-    commands[0] = 0x03;
-    commands[1] = 0x8D + probe;
-    commands[2] = 0x00;
-    commands[3] = 0x00;
+    commands[0] = 0x12;
+    commands[1] = sensor_index;
 
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
-    rr = dev->driver->read( handle, dev->read_endpoint, response, 64 );
+    rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
-    msg_debug2(
-        "%02X %02X %02X %02X %02X %02X\n", response[0], response[1], response[2], response[3],
-        response[4], response[5] );
+    msg_debug2( "%02X %02X %02X\n", response[0], response[1], response[2] );
 
-    // memcpy(temperature, response+2, 2);
-    uint16_t temp = ( response[2] << 8 ) + response[3];
-    *( temperature ) = (double)temp / 1000;
-    // snprintf(temperature, temperature_str_len, "%5.2f C", temp_double);
+    uint16_t data = ( response[1] << 8 ) + response[2];
+    *( voltage ) = (double)data / 1000;
+
+    // snprintf(voltage, voltage_str_len, "%2.3f V", volts);
 
     return 0;
 }

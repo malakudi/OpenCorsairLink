@@ -16,44 +16,55 @@
  * along with OpenCorsairLink.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*! \file lowlevel/rmi.c
- *  \brief Lowlevel Routines for RMi Series of Power Supplies
+/*! \file lowlevel/coolit.c
+ *  \brief Lowlevel Routines for CoolIT USB HID based devices
  */
-#include "lowlevel/rmi.h"
+#include "lowlevel/coolit.h"
 
 #include <libusb.h>
 #include <stdio.h>
 
-#define TIMEOUT_DEFAULT 5000
+#define HID_SET_REPORT 0x09
+#define HID_GET_REPORT 0x01
+#define HID_REPORT_TYPE_INPUT 0x01
+#define HID_REPORT_TYPE_OUTPUT 0x02
+#define HID_REPORT_TYPE_FEATURE 0x03
+#define TIMEOUT_DEFAULT 1000
+#define INTERFACE_NUMBER 0
 #define INTERRUPT_IN_ENDPOINT 0x81
-#define INTERRUPT_OUT_ENDPOINT 0x01
 
-/*! RMi Power Supply Init
- *  RMi Power Supply Init is empty
+// Values for bmRequestType in the Setup transaction's Data packet.
+static const int CONTROL_REQUEST_TYPE_IN =
+    LIBUSB_ENDPOINT_IN | LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_RECIPIENT_INTERFACE;
+static const int CONTROL_REQUEST_TYPE_OUT =
+    LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_RECIPIENT_INTERFACE;
+
+/*! USB HID Init routine
+ *  USB HID Init routine is empty
  *  @param[in] handle for the data
  *  @param[in] device endpoint for the data
  *  @return 0
  */
 int
-corsairlink_rmi_init( struct libusb_device_handle* dev_handle, uint8_t endpoint )
+corsairlink_coolit_init( struct libusb_device_handle* dev_handle, uint8_t endpoint )
 {
     return 0;
 }
 
-/*! RMi Power Supply De-Init
- *  RMi Power Supply De-Init is empty
+/*! USB HID De-Init routine
+ *  USB HID De-Init routine is empty
  *  @param[in] handle for the data
  *  @param[in] device endpoint for the data
  *  @return 0
  */
 int
-corsairlink_rmi_deinit( struct libusb_device_handle* dev_handle, uint8_t endpoint )
+corsairlink_coolit_deinit( struct libusb_device_handle* dev_handle, uint8_t endpoint )
 {
     return 0;
 }
 
-/*! RMi Power Supply Lowlevel Write
- *  RMi Power Supply Lowlevel Write uses a interrupt transfer
+/*! USB HID Lowlevel Write
+ *  USB HID Lowlevel Write uses a control transfer
  *  @param[in] handle for the data
  *  @param[in] device endpoint for the data
  *  @param[in] data to send
@@ -61,28 +72,29 @@ corsairlink_rmi_deinit( struct libusb_device_handle* dev_handle, uint8_t endpoin
  *  @return 0
  */
 int
-corsairlink_rmi_write(
+corsairlink_coolit_write(
     struct libusb_device_handle* dev_handle, uint8_t endpoint, uint8_t* data, int length )
 {
     int bytes_transferred;
     int rr;
 
-    rr = libusb_interrupt_transfer(
-        dev_handle, endpoint, data, length, &bytes_transferred, TIMEOUT_DEFAULT );
+    rr = libusb_control_transfer(
+        dev_handle, CONTROL_REQUEST_TYPE_OUT, HID_SET_REPORT, /** HID Set_Report */
+        ( HID_REPORT_TYPE_OUTPUT << 8 ) | 0x00, INTERFACE_NUMBER, data, length, TIMEOUT_DEFAULT );
 
     return rr;
 }
 
-/*! RMi Power Supply Lowlevel Read
- *  RMi Power Supply Lowlevel Read uses a interrupt transfer
+/*! USB HID Lowlevel Read
+ *  USB HID Lowlevel Write uses a control transfer
  *  @param[in] handle for the data
  *  @param[in] device endpoint for the data
- *  @param[in] data to send
- *  @param[in] length of data to send, in bytes
+ *  @param[out] data received
+ *  @param[in] length of data to received, in bytes
  *  @return 0
  */
 int
-corsairlink_rmi_read(
+corsairlink_coolit_read(
     struct libusb_device_handle* dev_handle, uint8_t endpoint, uint8_t* data, int length )
 {
     int bytes_transferred;

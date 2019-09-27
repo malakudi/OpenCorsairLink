@@ -16,145 +16,126 @@
  * along with OpenCorsairLink.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*! \file protocol/rmi/core.c
- *  \brief Core Routines for RMi Series of Power Supplies
- */
 #include "device.h"
 #include "driver.h"
-#include "lowlevel/rmi.h"
-#include "protocol/rmi.h"
+#include "lowlevel/commanderpro.h"
 
 #include <errno.h>
 #include <libusb.h>
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-double
-convert_bytes_double( uint16_t v16 )
-{
-    int exponent = v16 >> 11;
-    int fraction = (int)( v16 & 2047 );
-    if ( exponent > 15 )
-        exponent = -( 32 - exponent );
-
-    if ( fraction > 1023 )
-        fraction = -( 2048 - fraction );
-
-    if ( ( fraction & 1 ) == 1 )
-        fraction++;
-
-    return (double)fraction * pow( 2.0, (double)exponent );
-}
-
 int
-corsairlink_rmi_device_id(
+corsairlink_commanderpro_device_id(
     struct corsair_device_info* dev, struct libusb_device_handle* handle, uint8_t* device_id )
 {
-    // memset(device_id, 0x00, 1);
+    // memcpy(device_id, 0x00, 1);
     ( *device_id ) = 0xFF;
     return 0;
 }
 
 int
-corsairlink_rmi_firmware_id(
+corsairlink_commanderpro_name(
+    struct corsair_device_info* dev,
+    struct libusb_device_handle* handle,
+    char* name,
+    uint8_t name_str_len )
+{
+    snprintf( name, name_str_len, "%s", dev->name );
+    return 0;
+}
+
+int
+corsairlink_commanderpro_vendor(
+    struct corsair_device_info* dev,
+    struct libusb_device_handle* handle,
+    char* name,
+    uint8_t name_str_len )
+{
+    snprintf( name, name_str_len, "Corsair" );
+    return 0;
+}
+
+int
+corsairlink_commanderpro_product(
+    struct corsair_device_info* dev,
+    struct libusb_device_handle* handle,
+    char* name,
+    uint8_t name_str_len )
+{
+    snprintf( name, name_str_len, "%s", dev->name );
+    return 0;
+}
+
+int
+corsairlink_commanderpro_firmware_id(
     struct corsair_device_info* dev,
     struct libusb_device_handle* handle,
     char* firmware,
-    uint8_t firmware_size )
-{
-    snprintf( firmware, firmware_size, "NA" );
-
-    return 0;
-}
-
-int
-corsairlink_rmi_name(
-    struct corsair_device_info* dev,
-    struct libusb_device_handle* handle,
-    char* name,
-    uint8_t name_size )
+    uint8_t firmware_str_len )
 {
     int rr;
-    uint8_t response[64];
+    uint8_t response[16];
     uint8_t commands[64];
     memset( response, 0, sizeof( response ) );
     memset( commands, 0, sizeof( commands ) );
 
-    commands[0] = 0xfe;
-    commands[1] = 0x03;
+    commands[0] = 0x02;
 
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
-    rr = dev->driver->read( handle, dev->read_endpoint, response, 64 );
+    rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
-    uint32_t bytes_to_copy = 16;
-    if ( name_size < bytes_to_copy )
-    {
-        bytes_to_copy = name_size;
-    }
-    memcpy( name, response + 2, bytes_to_copy );
+    snprintf( firmware, firmware_str_len, "V%d.%d.%d", response[1], response[2], response[3] );
 
-    return 0;
+    return rr;
 }
 
 int
-corsairlink_rmi_vendor(
+corsairlink_commanderpro_software_id(
     struct corsair_device_info* dev,
     struct libusb_device_handle* handle,
-    char* name,
-    uint8_t name_size )
+    char* firmware,
+    uint8_t firmware_str_len )
 {
     int rr;
-    uint8_t response[64];
+    uint8_t response[16];
     uint8_t commands[64];
     memset( response, 0, sizeof( response ) );
     memset( commands, 0, sizeof( commands ) );
 
     commands[0] = 0x03;
-    commands[1] = 0x99;
-    commands[2] = 0x00;
 
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
-    rr = dev->driver->read( handle, dev->read_endpoint, response, 64 );
+    rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
-    uint32_t bytes_to_copy = 16;
-    if ( name_size < bytes_to_copy )
-    {
-        bytes_to_copy = name_size;
-    }
-    memcpy( name, response + 2, bytes_to_copy );
+    snprintf(
+        firmware, firmware_str_len, "%d.%d.%d.%d", response[1], response[2], response[3],
+        response[4] );
 
-    return 0;
+    return rr;
 }
 
 int
-corsairlink_rmi_product(
+corsairlink_commanderpro_bootloader_id(
     struct corsair_device_info* dev,
     struct libusb_device_handle* handle,
-    char* name,
-    uint8_t name_size )
+    char* firmware,
+    uint8_t firmware_str_len )
 {
     int rr;
-    uint8_t response[64];
+    uint8_t response[16];
     uint8_t commands[64];
     memset( response, 0, sizeof( response ) );
     memset( commands, 0, sizeof( commands ) );
 
-    commands[0] = 0x03;
-    commands[1] = 0x9a;
-    commands[2] = 0x00;
+    commands[0] = 0x06;
 
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
-    rr = dev->driver->read( handle, dev->read_endpoint, response, 64 );
+    rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
-    uint32_t bytes_to_copy = 16;
-    if ( name_size < bytes_to_copy )
-    {
-        bytes_to_copy = name_size;
-    }
-    memcpy( name, response + 2, bytes_to_copy );
+    snprintf( firmware, firmware_str_len, "V0.%d.%d", response[1], response[2] );
 
-    return 0;
+    return rr;
 }
